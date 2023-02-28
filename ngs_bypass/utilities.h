@@ -13,11 +13,18 @@
 
 typedef struct modInfo
 {
-	std::string name;
-	unsigned char* base;
-	unsigned char* baseCpy;
-	DWORD64 size;
+    std::string name;
+    unsigned char* base;
+    unsigned char* baseCpy;
+    DWORD64 size;
 }modInfo;
+
+typedef struct modInfoNew
+{
+	std::string name;
+	DWORD64 base;
+	DWORD64 size;
+}modInfoNew;
 
 modInfo copyModule(std::string name);
 bool changeImageBase(modInfo& obj);
@@ -26,7 +33,7 @@ HANDLE getTmpHandle(std::wstring name);
 std::wstring findKernelTmpName();
 void dumpModuleToFile(std::string name);
 DWORD getProcID(const wchar_t* name);
-DWORD64 getExternBaseAddr(std::string name);
+modInfoNew getExternBaseAddr(std::string name, DWORD ProcId);
 
 std::wstring s2ws(const std::string& str);
 std::string ws2s(const std::wstring& wstr);

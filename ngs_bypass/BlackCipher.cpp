@@ -41,7 +41,7 @@ namespace BlackCipher
 
         BlackCipher::DumpModules();
         BlackCipher::ActivateDetours();
-        getExternBaseAddr("MapleStory.exe");
+        //modInfoNew maple = getExternBaseAddr("MapleStory.exe");
     }
 
 

@@ -17,6 +17,10 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
     case DLL_PROCESS_ATTACH:
     {
+        AllocConsole();
+        FILE* fl;
+        freopen_s(&fl, "CONOUT$", "w", stdout);
+
         char moduleFileName[MAX_PATH];
         GetModuleFileNameA(GetModuleHandle(NULL), moduleFileName, MAX_PATH);
         std::string procName = moduleFileName;
@@ -27,6 +31,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
             BlackCipher::BlackCipherMain();
         else
             std::cout << "not injected into MapleStory.exe or BlackCipher64.aes" << std::endl;
+        DWORD procId = getProcID(L"MapleStory.exe");
+        getExternBaseAddr("maplestory.exe", procId);
 
     }
     case DLL_THREAD_ATTACH:

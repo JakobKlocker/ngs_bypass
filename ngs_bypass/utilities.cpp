@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>  
 #include <tchar.h> 
+#include <cstring>
+
 
 void dumpModuleToFile(std::string name)
 {
@@ -177,26 +179,29 @@ DWORD getProcID(const wchar_t* name)
 	return (0);
 }
 
-DWORD64 getExternBaseAddr(std::string name)
+modInfoNew getExternBaseAddr(std::string name, DWORD procId)
 {
+	modInfoNew ret;
+	ret.name = name;
 	HANDLE hModuleSnap = INVALID_HANDLE_VALUE;
 	MODULEENTRY32 me32;
 
-	hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, getProcID(s2ws(name).c_str()));
+	hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, procId);
 	me32.dwSize = sizeof(MODULEENTRY32);
 	Module32First(hModuleSnap, &me32);
-
 	do
 	{
-		_tprintf(TEXT("\n\n     MODULE NAME:     %s"), me32.szModule);
-		_tprintf(TEXT("\n     executable     = %s"), me32.szExePath);
-		_tprintf(TEXT("\n     process ID     = 0x%08X"), me32.th32ProcessID);
-		_tprintf(TEXT("\n     ref count (g)  =     0x%04X"), me32.GlblcntUsage);
-		_tprintf(TEXT("\n     ref count (p)  =     0x%04X"), me32.ProccntUsage);
-		_tprintf(TEXT("\n     base address   = 0x%08X"), (DWORD)me32.modBaseAddr);
-		_tprintf(TEXT("\n     base size      = %d"), me32.modBaseSize);
-
+		std::wstring tmp = me32.szExePath;
+		if (tmp.find(s2ws(name)) != std::string::npos)
+		{
+			ret.base = (DWORD64)me32.modBaseAddr;
+			ret.size = me32.modBaseSize;
+			std::cout << "Found " << name << std::endl;
+			std::cout << std::hex << "BaseAddr " << (DWORD64)ret.base << std::endl;
+			std::cout << std::hex << "Size " << (DWORD64)ret.size << std::endl;
+			return (ret);
+		}
 	} while (Module32Next(hModuleSnap, &me32));
 	CloseHandle(hModuleSnap);
-	return (0);
+	return (ret);
 }
