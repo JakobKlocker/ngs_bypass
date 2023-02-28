@@ -5,11 +5,11 @@
 //#include <Winternl.h>
 #include <winnt.h>
 #include <stdint.h>
-#include "ntdll.h"
 #include <locale>
 #include <codecvt>
+#include <TlHelp32.h>
 
-
+#include "ntdll.h"
 
 typedef struct modInfo
 {
@@ -24,6 +24,9 @@ bool changeImageBase(modInfo& obj);
 std::wstring findNtdllTmpName();
 HANDLE getTmpHandle(std::wstring name);
 std::wstring findKernelTmpName();
+void dumpModuleToFile(std::string name);
+DWORD getProcID(const wchar_t* name);
+DWORD64 getExternBaseAddr(std::string name);
 
 std::wstring s2ws(const std::string& str);
 std::string ws2s(const std::wstring& wstr);

@@ -19,21 +19,16 @@ NTSTATUS NtReadVirtualMemory_Hook(
     PULONG NumberOfBytesReaded)
 {
     g_NtReadVirtualMemory = (p_NtReadVirtualMemory)((DWORD64)GetProcAddress(GetModuleHandle(L"ntdll.dll"), "NtReadVirtualMemory"));
-    //std::cout << g_NtReadVirtualMemory << std::endl;
     char buf[256];
     GetModuleFileNameExA(ProcessHandle, NULL, buf, 256);
-   /* std::string nBuf = buf;
-    std::cout << "Reading Base Addr: " << (DWORD64)BaseAddress << std::endl;*/
+    std::string procName = buf;
+    if (procName.find("MapleStory.exe") != std::string::npos)
+    {
+        std::cout << "Checking Maplestory address at " << BaseAddress << std::endl;
+    }
     if ((DWORD64)ProcessHandle == 0xFFFFFFFFFFFFFFFF)
     {
-        //std::cout << "BC Info :" << (DWORD64)blackCipherInfo->base << "   " << (DWORD64)blackCipherInfo->size << std::endl;
-        //std::cout << "Ntdll Info :" << (DWORD64)ntdllInfo->base << "   " << (DWORD64)ntdllInfo->size << std::endl;
-        //std::cout << "BC reading BC memory at: " << (DWORD64)BaseAddress << std::endl;
-        //if ((DWORD64)BaseAddress >= (DWORD64)blackCipherInfo->base && (DWORD64)BaseAddress <= (DWORD64)blackCipherInfo->base + (DWORD64)blackCipherInfo->size)
-        //{
-        //    std::cout << "Redirected to BC Copy at :" << std::hex << (DWORD64)BaseAddress - (DWORD64)blackCipherInfo->base + (DWORD64)blackCipherInfo->baseCpy << std::endl;
-        //    return(g_NtReadVirtualMemory(ProcessHandle, (PVOID)((DWORD64)BaseAddress - (DWORD64)blackCipherInfo->base + (DWORD64)blackCipherInfo->baseCpy), Buffer, NumberOfBytesToRead, NumberOfBytesReaded));
-        //}
+        std::cout << "Reading Addr inside BC: " << (DWORD64)BaseAddress << std::endl;
         if ((DWORD64)BaseAddress >= (DWORD64)ntdllInfo->base && (DWORD64)BaseAddress <= (DWORD64)ntdllInfo->base + (DWORD64)ntdllInfo->size)
         {
             std::cout << "Redirected to ntdll Copy at :" << std::hex << (DWORD64)BaseAddress - (DWORD64)ntdllInfo->base + (DWORD64)ntdllInfo->baseCpy << std::endl;
