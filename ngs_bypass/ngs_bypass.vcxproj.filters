@@ -33,6 +33,9 @@
     <ClInclude Include="BlackCipher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MapleStory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BlackCipher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MapleStory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

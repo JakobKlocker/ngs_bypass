@@ -34,6 +34,7 @@ std::wstring findKernelTmpName();
 void dumpModuleToFile(std::string name);
 DWORD getProcID(const wchar_t* name);
 modInfoNew getExternBaseAddr(std::string name, DWORD ProcId);
+modInfoNew getExternNtdlTmpInfos(DWORD procId);
 
 std::wstring s2ws(const std::string& str);
 std::string ws2s(const std::wstring& wstr);

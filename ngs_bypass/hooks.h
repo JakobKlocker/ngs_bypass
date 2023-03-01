@@ -10,7 +10,24 @@ extern modInfo *kernel32Info;
 extern modInfo *blackCipherInfo;
 extern modInfo* tmpNtdllInfo;
 
-NTSTATUS NtReadVirtualMemory_Hook(
+extern modInfoNew* Maple_BCNtdllInfos;
+extern modInfoNew* Maple_BCBlackCipherInfos;
+extern modInfoNew* Maple_BCNtdllTmpInfos;
+
+extern modInfoNew* BC_MapleInfos;
+extern modInfoNew* BC_MapleNtdllTmpInfos;
+
+extern modInfo* Maple_MapleCpy;
+extern modInfo* Maple_MsNtdllTmpCpy;
+
+NTSTATUS NtReadVirtualMemory_BC_Hook(
+    HANDLE ProcessHandle,
+    PVOID BaseAddress,
+    PVOID Buffer,
+    ULONG NumberOfBytesToRead,
+    PULONG NumberOfBytesReaded);
+
+NTSTATUS NtReadVirtualMemory_MS_Hook(
     HANDLE ProcessHandle,
     PVOID BaseAddress,
     PVOID Buffer,

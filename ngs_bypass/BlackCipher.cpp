@@ -1,32 +1,40 @@
 #include "pch.h"
 #include "BlackCipher.h"
 
-modInfo* ntdllInfo = new modInfo;
-modInfo* kernel32Info = new modInfo;
-modInfo* blackCipherInfo = new modInfo;
-modInfo* tmpNtdllInfo = new modInfo;
+modInfoNew* BC_MapleInfos = new modInfoNew;
+modInfoNew* BC_MapleNtdllTmpInfos = new modInfoNew;
+
+modInfo *ntdllInfo = new modInfo;
+modInfo *tmpNtdllInfo = new modInfo;
 
 std::wstring NtdllTmpName = findNtdllTmpName();
-std::wstring kernel32TmpName = findKernelTmpName();
 
 namespace BlackCipher
 {
     void DumpModules()
     {
         dumpModuleToFile("ntdll.dll");
-        dumpModuleToFile(ws2s(NtdllTmpName));
         dumpModuleToFile("BlackCipher64.aes");
+    }
+
+    void getMapleInfos()
+    {
+        DWORD BCPid = getProcID(L"MapleStory.exe");
+        if (BCPid)
+        {
+            *BC_MapleNtdllTmpInfos = getExternNtdlTmpInfos(BCPid);
+            *BC_MapleInfos = getExternBaseAddr("maplestory.exe", BCPid);
+        }
+        else
+            std::cout << "Couldnt get Maples PID" << std::endl;
     }
 
     void ActivateDetours()
     {
         x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "ZwMapViewOfSection"), (DWORD64)ZwMapViewOfSection_Hook);
         x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "ZwOpenProcess"), (DWORD64)ZwOpenProcess_Hook);
-        x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "NtReadVirtualMemory"), (DWORD64)NtReadVirtualMemory_Hook);
+        x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "NtReadVirtualMemory"), (DWORD64)NtReadVirtualMemory_BC_Hook);
 
-        //x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "ZwMapViewOfSection"), (DWORD64)ZwMapViewOfSection_Hook);
-       //x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "ZwOpenProcess"), (DWORD64)ZwOpenProcess_Hook);
-        //x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "NtReadFile"), (DWORD64)NtReadFile_hook);
     }
 
         void BlackCipherMain()
@@ -34,14 +42,15 @@ namespace BlackCipher
         AllocConsole();
         FILE* fl;
         freopen_s(&fl, "CONOUT$", "w", stdout);
+        std::cout << "Inside bc" << std::endl;
 
         *ntdllInfo = copyModule("ntdll.dll");
         *tmpNtdllInfo = copyModule(ws2s(NtdllTmpName));
-        *blackCipherInfo = copyModule("BlackCipher64.aes");
 
         BlackCipher::DumpModules();
+        BlackCipher::getMapleInfos();
         BlackCipher::ActivateDetours();
-        //modInfoNew maple = getExternBaseAddr("MapleStory.exe");
+
     }
 
 
@@ -57,3 +66,14 @@ namespace BlackCipher
 //    0,
 //    0,
 //    1333337);
+
+
+
+//* ntdllInfo = copyModule("ntdll.dll");
+//*tmpNtdllInfo = copyModule(ws2s(NtdllTmpName));
+//*blackCipherInfo = copyModule("BlackCipher64.aes");
+
+
+        //x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "ZwMapViewOfSection"), (DWORD64)ZwMapViewOfSection_Hook);
+       //x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "ZwOpenProcess"), (DWORD64)ZwOpenProcess_Hook);
+        //x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "NtReadFile"), (DWORD64)NtReadFile_hook);

@@ -1,12 +1,8 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include "BlackCipher.h"
+#include "MapleStory.h"
 #include <string>
-
-void MapleStoryMain()
-{
-
-}
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -25,14 +21,15 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         GetModuleFileNameA(GetModuleHandle(NULL), moduleFileName, MAX_PATH);
         std::string procName = moduleFileName;
 
-        if (procName.find("MapleStory.exe") != std::string::npos)
-            MapleStoryMain();
+        //std::cout << procName << std::endl;
+        if (procName.find("maplestory.exe") != std::string::npos)
+            MapleStory::MapleStoryMain();
         else if (procName.find("BlackCipher64.aes") != std::string::npos)
             BlackCipher::BlackCipherMain();
         else
             std::cout << "not injected into MapleStory.exe or BlackCipher64.aes" << std::endl;
-        DWORD procId = getProcID(L"MapleStory.exe");
-        getExternBaseAddr("maplestory.exe", procId);
+        
+        //getExternBaseAddr("BlackCipher64.aes", procId);
 
     }
     case DLL_THREAD_ATTACH:

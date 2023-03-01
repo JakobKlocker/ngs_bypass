@@ -154,6 +154,7 @@
     <ClInclude Include="BlackCipher.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="hooks.h" />
+    <ClInclude Include="MapleStory.h" />
     <ClInclude Include="ntdll.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="utilities.h" />
@@ -162,6 +163,7 @@
     <ClCompile Include="BlackCipher.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="hooks.cpp" />
+    <ClCompile Include="MapleStory.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
