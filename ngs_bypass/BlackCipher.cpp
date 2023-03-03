@@ -32,7 +32,8 @@ namespace BlackCipher
     void ActivateDetours()
     {
         x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "ZwMapViewOfSection"), (DWORD64)ZwMapViewOfSection_Hook);
-        x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "ZwOpenProcess"), (DWORD64)ZwOpenProcess_Hook);
+        x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "ZwOpenProcess"), (DWORD64)ZwOpenProcess_Hook);
+        //x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "ZwOpenProcess"), (DWORD64)ZwOpenProcess_Hook);
         x64_detour((DWORD64*)GetProcAddress(GetModuleHandleW(NtdllTmpName.c_str()), "NtReadVirtualMemory"), (DWORD64)NtReadVirtualMemory_BC_Hook);
 
     }

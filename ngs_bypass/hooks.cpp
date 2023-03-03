@@ -34,7 +34,7 @@ NTSTATUS NtReadVirtualMemory_BC_Hook(
             HANDLE tmp = OpenFileMappingW(FILE_MAP_ALL_ACCESS, true, L"maplestory.exe_tmp");
             LPCTSTR pBuf = (LPTSTR)MapViewOfFile(tmp, FILE_MAP_ALL_ACCESS, 0, 0, BC_MapleInfos->size);
             status = g_NtReadVirtualMemory((HANDLE)0xFFFFFFFFFFFFFFFF, (PVOID)((DWORD64)BaseAddress - (DWORD64)BC_MapleInfos->base + (DWORD64)pBuf), Buffer, NumberOfBytesToRead, NumberOfBytesReaded);
-            std::cout << "Redirecting reading Maplestory, Status code: " << status << " ReadingBaseAddr : " << std::hex <<
+            std::cout << "Redirecting BlackCipher reading Maplestory, Status code: " << status << " ReadingBaseAddr : " << std::hex <<
                 (DWORD64)BaseAddress << " redirected addr:" <<  std::hex << (DWORD64)BaseAddress - (DWORD64)BC_MapleInfos->base + (DWORD64)pBuf << std::hex << "    sizeRead: " << (DWORD64)NumberOfBytesReaded << std::endl;
             //Sleep(10000);
             UnmapViewOfFile(pBuf);
@@ -46,7 +46,7 @@ NTSTATUS NtReadVirtualMemory_BC_Hook(
             HANDLE tmp = OpenFileMappingW(FILE_MAP_ALL_ACCESS, true, L"ntdll.dll_tmp");
             LPCTSTR pBuf = (LPTSTR)MapViewOfFile(tmp, FILE_MAP_ALL_ACCESS, 0, 0, BC_MapleNtdllTmpInfos->size);
             status = g_NtReadVirtualMemory((HANDLE)0xFFFFFFFFFFFFFFFF, (PVOID)((DWORD64)BaseAddress - (DWORD64)BC_MapleNtdllTmpInfos->base + (DWORD64)pBuf), Buffer, NumberOfBytesToRead, NumberOfBytesReaded);
-            std::cout << "Redirecting reading Maplestory, Status code: " << status << " ReadingBaseAddr : " << std::hex <<
+            std::cout << "Redirecting BlackCipher reading Maplestorys NtdllTmp, Status code: " << status << " ReadingBaseAddr : " << std::hex <<
                 (DWORD64)BaseAddress << " redirected addr:" << std::hex << (DWORD64)BaseAddress - (DWORD64)BC_MapleNtdllTmpInfos->base + (DWORD64)pBuf << "    sizeRead: " << std::hex << (DWORD64)NumberOfBytesReaded << std::endl;
             //Sleep(10000);
             UnmapViewOfFile(pBuf);
@@ -60,12 +60,12 @@ NTSTATUS NtReadVirtualMemory_BC_Hook(
         //std::cout << "Reading Addr inside BC: " << (DWORD64)BaseAddress << std::endl;
         if ((DWORD64)BaseAddress >= (DWORD64)ntdllInfo->base && (DWORD64)BaseAddress <= (DWORD64)ntdllInfo->base + (DWORD64)ntdllInfo->size)
         {
-            std::cout << "Redirected BC to ntdll Copy at :" << std::hex << (DWORD64)BaseAddress - (DWORD64)ntdllInfo->base + (DWORD64)ntdllInfo->baseCpy << std::endl;
+            std::cout << "Redirected BlackCipher Reading BlackCiphers Ntdll at :" << std::hex << (DWORD64)BaseAddress - (DWORD64)ntdllInfo->base + (DWORD64)ntdllInfo->baseCpy << std::endl;
             return(g_NtReadVirtualMemory(ProcessHandle, (PVOID)((DWORD64)BaseAddress - (DWORD64)ntdllInfo->base + (DWORD64)ntdllInfo->baseCpy), Buffer, NumberOfBytesToRead, NumberOfBytesReaded));
         }
         if ((DWORD64)BaseAddress >= (DWORD64)tmpNtdllInfo->base && (DWORD64)BaseAddress <= (DWORD64)tmpNtdllInfo->base + (DWORD64)tmpNtdllInfo->size)
         {
-            std::cout << "Redirected to tmpNtdlll Copy at :" << std::hex << (DWORD64)BaseAddress - (DWORD64)tmpNtdllInfo->base + (DWORD64)tmpNtdllInfo->baseCpy << std::endl;
+            std::cout << "Redirected BlackCipher Reading BlackCiphers NtdlCpy Copy at :" << std::hex << (DWORD64)BaseAddress - (DWORD64)tmpNtdllInfo->base + (DWORD64)tmpNtdllInfo->baseCpy << std::endl;
             return(g_NtReadVirtualMemory(ProcessHandle, (PVOID)((DWORD64)BaseAddress - (DWORD64)tmpNtdllInfo->base + (DWORD64)tmpNtdllInfo->baseCpy), Buffer, NumberOfBytesToRead, NumberOfBytesReaded));
         }
     }
@@ -105,8 +105,20 @@ NTSTATUS NtReadVirtualMemory_MS_Hook(
             HANDLE tmp = OpenFileMappingW(FILE_MAP_ALL_ACCESS, true, L"ntdll.dll_tmp");
             LPCTSTR pBuf = (LPTSTR)MapViewOfFile(tmp, FILE_MAP_ALL_ACCESS, 0, 0, Maple_BCNtdllTmpInfos->size);
             status = g_NtReadVirtualMemory((HANDLE)0xFFFFFFFFFFFFFFFF, (PVOID)((DWORD64)BaseAddress - (DWORD64)Maple_BCNtdllTmpInfos->base + (DWORD64)pBuf), Buffer, NumberOfBytesToRead, NumberOfBytesReaded);
-            std::cout << "Redirecting reading Maplestory, Status code: " << status << " ReadingBaseAddr : " << std::hex <<
+            std::cout << "Redirecting MapleStory reading BlackCipher ntdllTmp, Status code: " << status << " ReadingBaseAddr : " << std::hex <<
                 (DWORD64)BaseAddress << " redirected addr:" << std::hex << (DWORD64)BaseAddress - (DWORD64)Maple_BCNtdllTmpInfos->base + (DWORD64)pBuf << "    sizeRead: " << std::hex << (DWORD64)NumberOfBytesReaded << std::endl;
+            //Sleep(10000);
+            UnmapViewOfFile(pBuf);
+            CloseHandle(tmp);
+            return(status);
+        }
+        if ((DWORD64)BaseAddress >= (DWORD64)Maple_BCNtdllInfos->base && (DWORD64)BaseAddress <= (DWORD64)Maple_BCNtdllInfos->base + (DWORD64)Maple_BCNtdllInfos->size)
+        {
+            HANDLE tmp = OpenFileMappingW(FILE_MAP_ALL_ACCESS, true, L"ntdll.dll_tmp");
+            LPCTSTR pBuf = (LPTSTR)MapViewOfFile(tmp, FILE_MAP_ALL_ACCESS, 0, 0, Maple_BCNtdllInfos->size);
+            status = g_NtReadVirtualMemory((HANDLE)0xFFFFFFFFFFFFFFFF, (PVOID)((DWORD64)BaseAddress - (DWORD64)Maple_BCNtdllInfos->base + (DWORD64)pBuf), Buffer, NumberOfBytesToRead, NumberOfBytesReaded);
+            std::cout << "Redirecting MapleStory reading BlackCipher ntdll, Status code: " << status << " ReadingBaseAddr : " << std::hex <<
+                (DWORD64)BaseAddress << " redirected addr:" << std::hex << (DWORD64)BaseAddress - (DWORD64)Maple_BCNtdllInfos->base + (DWORD64)pBuf << "    sizeRead: " << std::hex << (DWORD64)NumberOfBytesReaded << std::endl;
             //Sleep(10000);
             UnmapViewOfFile(pBuf);
             CloseHandle(tmp);
@@ -119,18 +131,17 @@ NTSTATUS NtReadVirtualMemory_MS_Hook(
         //std::cout << "Reading Addr inside BC: " << (DWORD64)BaseAddress << std::endl;
         if ((DWORD64)BaseAddress >= (DWORD64)Maple_MapleCpy->base && (DWORD64)BaseAddress <= (DWORD64)Maple_MapleCpy->base + (DWORD64)Maple_MapleCpy->size)
         {
-            std::cout << "Redirected Ms to MsCopy at :" << std::hex << (DWORD64)BaseAddress - (DWORD64)Maple_MapleCpy->base + (DWORD64)Maple_MapleCpy->baseCpy << " Size Read: " << std::hex << NumberOfBytesToRead << std::endl;
+            std::cout << "Redirected Maplestory Reading Maplestory to MSCopy at :" << std::hex << (DWORD64)BaseAddress - (DWORD64)Maple_MapleCpy->base + (DWORD64)Maple_MapleCpy->baseCpy << " Size Read: " << std::hex << NumberOfBytesToRead << std::endl;
             return(g_NtReadVirtualMemory(ProcessHandle, (PVOID)((DWORD64)BaseAddress - (DWORD64)Maple_MapleCpy->base + (DWORD64)Maple_MapleCpy->baseCpy), Buffer, NumberOfBytesToRead, NumberOfBytesReaded));
         }
         if ((DWORD64)BaseAddress >= (DWORD64)Maple_MsNtdllTmpCpy->base && (DWORD64)BaseAddress <= (DWORD64)Maple_MsNtdllTmpCpy->base + (DWORD64)Maple_MsNtdllTmpCpy->size)
         {
-            std::cout << "Redirected MS to tmpNtdlll Copy at :" << std::hex << (DWORD64)BaseAddress - (DWORD64)Maple_MsNtdllTmpCpy->base + (DWORD64)Maple_MsNtdllTmpCpy->baseCpy << " Size Read: " << std::hex << NumberOfBytesToRead << std::endl;
+            std::cout << "Redirected Maplestory Reading NtdllTmp to TmpCpyat :" << std::hex << (DWORD64)BaseAddress - (DWORD64)Maple_MsNtdllTmpCpy->base + (DWORD64)Maple_MsNtdllTmpCpy->baseCpy << " Size Read: " << std::hex << NumberOfBytesToRead << std::endl;
             return(g_NtReadVirtualMemory(ProcessHandle, (PVOID)((DWORD64)BaseAddress - (DWORD64)Maple_MsNtdllTmpCpy->base + (DWORD64)Maple_MsNtdllTmpCpy->baseCpy), Buffer, NumberOfBytesToRead, NumberOfBytesReaded));
         }
     }
     return(g_NtReadVirtualMemory(ProcessHandle, BaseAddress, Buffer, NumberOfBytesToRead, NumberOfBytesReaded));
 }
-
 
 //typedef NTSTATUS(NTAPI* p_NtReadVirtualMemory)
 //(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, ULONG NumberOfBytesToRead, PULONG NumberOfBytesReaded);
@@ -291,15 +302,17 @@ NTSTATUS ZwOpenProcess_Hook(
 {
     char buf[256];
     buf[0] = '\0';
-    g_ZwOpenProcess = (p_ZwOpenProcess)((DWORD64)GetProcAddress(GetModuleHandle(s2ws(tmpNtdllInfo->name).c_str()), "ZwOpenProcess"));
+    g_ZwOpenProcess = (p_ZwOpenProcess)((DWORD64)GetProcAddress(GetModuleHandle(L"ntdll.dll"), "ZwOpenProcess"));
+    //g_ZwOpenProcess = (p_ZwOpenProcess)((DWORD64)GetProcAddress(GetModuleHandle(s2ws(tmpNtdllInfo->name).c_str()), "ZwOpenProcess"));
     HANDLE tmp;
     g_ZwOpenProcess(&tmp, DesiredAccess, ObjectAttributes, ClientId);
     GetProcessImageFileNameA(tmp, buf, 256);
     std::string name = buf;
     std::cout << "OpenProcess: " << name << std::endl;
-    if (name.find("cheat") != std::string::npos || name.find("Proc") != std::string::npos)
+    if (name.find("cheat") != std::string::npos || name.find("Proc") != std::string::npos || name.find("bypass") != std::string::npos 
+        || name.find("hacker") != std::string::npos || name.find("IDA") != std::string::npos)
     {
-        std::cout << "hid from OpenProcess" << std::endl;
+        std::cout << "hid " << name << " from ZwOpenProcess/CreateToolhelp32Snapshot" << std::endl;
         return(STATUS_ACCESS_DENIED);
     }
     return(g_ZwOpenProcess(ProcessHandle, DesiredAccess, ObjectAttributes, ClientId));
