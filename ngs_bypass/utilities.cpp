@@ -146,16 +146,6 @@ modInfoNew getExternNtdlTmpInfos(DWORD procId)
 }
 
 
-
-
-
-
-
-
-
-
-
-
 std::wstring findKernelTmpName()
 {
 	{
@@ -193,7 +183,6 @@ HANDLE getTmpHandle(std::wstring name)
 
 modInfo copyModule(std::string name)
 {
-	std::cout << name << std::endl;
 	modInfo ret;
 	ret.name = name;
 	ret.base = (unsigned char*)GetModuleHandleA(name.c_str());
@@ -207,9 +196,9 @@ modInfo copyModule(std::string name)
 		return ret;
 	memcpy(ret.baseCpy, ret.base, ret.size);
 
-	std::cout << ret.name << ":" << std::endl;
+	std::cout << "Created local copy of " << ret.name << ":" << std::endl;
 	std::cout << "Base: " << std::hex << (DWORD64)ret.base << std::endl;
-	std::cout << "Cpy: " << std::hex << (DWORD64)ret.baseCpy << std::endl;
+	std::cout << "CpyBase: " << std::hex << (DWORD64)ret.baseCpy << std::endl;
 	std::cout << "Size: " << std::hex << (DWORD64)ret.size << std::endl;
 	return ret;
 }

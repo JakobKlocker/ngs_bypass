@@ -32,7 +32,7 @@ namespace MapleStory
             *Maple_BCBlackCipherInfos = getExternBaseAddr("BlackCipher64.aes", BCPid);
         }
         else
-            std::cout << "Couldnt get BC PID" << std::endl;
+            std::cout << "Couldnt get BlackCipher64 PID" << std::endl;
     }
 
     void MapleStoryMain()
@@ -40,7 +40,7 @@ namespace MapleStory
         AllocConsole();
         FILE* fl;
         freopen_s(&fl, "CONOUT$", "w", stdout);
-        std::cout << "Inside maple" << std::endl;
+        std::cout << "Inside Maplestory" << std::endl;
 
         *Maple_MapleCpy = copyModule("maplestory.exe");
         *Maple_MsNtdllTmpCpy = copyModule(ws2s(NtdllTmpName));
